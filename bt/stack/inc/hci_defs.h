@@ -5,7 +5,17 @@
 
 #include "hci_error.h"
 
-#define HCI_MAX_CMD_SIZE 255
+#define HCI_OPCODE(ogf, ocf) (ocf | ogf << 10)
+
+/**
+ * HCI Packet Types
+ */
+typedef enum {
+    kHciPacketTypeCommand   = 0x01,
+    kHciPacketTypeAclData   = 0x02,
+    kHciPacketTypeSyncData  = 0x03,
+    kHciPacketTypeEventData = 0x04,
+} HciPacketType;
 
 /**
  * HCI Group Types (OGFs)
@@ -19,7 +29,7 @@ typedef enum {
     kHciGroupTest                = 0x06,
     kHciGroupLeController        = 0x08,
     kHciGroupVendorSpecific      = 0x3F,
-} eHciGroup;
+} HciGroup;
 
 /**
  * Link Control Commands (OGF 0x01)
@@ -48,7 +58,7 @@ typedef enum {
     kHciCmdLinkControlReadRemoteSupportedFeatures = 0x1B,
     kHciCmdLinkControlReadRemoteVersionInfo       = 0x1D,
     kHciCmdLinkControlReadClockOffset             = 0x1F,
-} eHciCmdLinkControl;
+} HciCmdLinkControl;
 
 /**
  * Link Policy Commands (OGF 0x02)
@@ -65,7 +75,7 @@ typedef enum {
     kHciCmdLinkPolicySwitchRole    = 0x0B,
     kHciCmdLinkPolicyReadSettings  = 0x0C,
     kHciCmdLinkPolicyWriteSettings = 0x0D,
-} eHciCmdLinkPolicy;
+} HciCmdLinkPolicy;
 
 /**
  * Controller and Baseband Commands (OGF 0x03)
@@ -123,4 +133,27 @@ typedef enum {
     kHciCmdControllerWritePageScanPeriodMode        = 0x3C,
     kHciCmdControllerReadPageScanMode               = 0x3D,
     kHciCmdControllerWritePageScanMode              = 0x3E,
-} eHciCmdControllerBaseband;
+} HciCmdControllerBaseband;
+
+#pragma pack(1)
+typedef struct {
+    uint16_t opcode;
+    uint8_t param_len;
+} HciHdr;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct {
+    HciHdr hdr;
+    uint8_t params[];
+} HciCmd;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct {
+    HciHdr hdr;
+} HciCmdReset;
+#pragma pack()
+
+#define HCI_MAX_PARAM_LEN (UINT8_MAX)
+#define HCI_MAX_CMD_LEN (HCI_MAX_PARAM_LEN + sizeof(HciHdr))

@@ -24,3 +24,8 @@
  *  - BT Spec: Vol 2, Part E, Section 3.19 - HCI Requirements for LE Controller
  */
 #pragma once
+
+/**
+ * Send an HCI Reset command to the Controller.
+ */
+int HciSendReset(void);

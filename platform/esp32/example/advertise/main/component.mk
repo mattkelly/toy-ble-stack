@@ -6,3 +6,8 @@
 # in the build directory. This behaviour is entirely configurable,
 # please read the ESP-IDF documents if you need to do this.
 #
+TBLE_ROOT := ../../../../..
+
+COMPONENT_ADD_INCLUDEDIRS := $(TBLE_ROOT)/bt/stack/inc .
+
+COMPONENT_SRCDIRS := $(TBLE_ROOT)/bt/stack .
