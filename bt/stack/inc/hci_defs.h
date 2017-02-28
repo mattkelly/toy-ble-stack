@@ -135,6 +135,59 @@ typedef enum {
     kHciCmdControllerWritePageScanMode              = 0x3E,
 } HciCmdControllerBaseband;
 
+/**
+ * LE Controller Commands (OGF 0x08)
+ * BT Spec: Vol 2, Part E, Section 7.8
+ */
+typedef enum {
+    kHciCmdLeSetEventMask                          = 0x01,
+    kHciCmdLeReadBufferSize                        = 0x02,
+    kHciCmdLeReadLocalSupportedFeatures            = 0x03,
+    kHciCmdLeSetRandomAddr                         = 0x05,
+    kHciCmdLeSetAdvertisingParams                  = 0x06,
+    kHciCmdLeReadAdvertisingChannelTxPower         = 0x07,
+    kHciCmdLeSetAdvertisingData                    = 0x08,
+    kHciCmdLeSetScanResponseData                   = 0x09,
+    kHciCmdLeSetAdvertiseEnable                    = 0x0A,
+    kHciCmdLeSetScanParams                         = 0x0B,
+    kHciCmdLeSetScanEnable                         = 0x0C,
+    kHciCmdLeCreateConnection                      = 0x0D,
+    kHciCmdLeCreateConnectionCancel                = 0x0E,
+    kHciCmdLeReadWhiteListSize                     = 0x0F,
+    kHciCmdLeClearWhiteList                        = 0x10,
+    kHciCmdLeAddDeviceToWhiteList                  = 0x11,
+    kHciCmdLeRemoveDeviceFromWhiteList             = 0x12,
+    kHciCmdLeConnectionUpdate                      = 0x13,
+    kHciCmdLeSetHostChannelClassification          = 0x14,
+    kHciCmdLeReadChannelMap                        = 0x15,
+    kHciCmdLeReadRemoteUsedFeatures                = 0x16,
+    kHciCmdLeEncrypt                               = 0x17,
+    kHciCmdLeRand                                  = 0x18,
+    kHciCmdLeStartEncryption                       = 0x19,
+    kHciCmdLeLongTermKeyRequestReply               = 0x1A,
+    kHciCmdLeLongTermKeyRequestNegativeReply       = 0x1B,
+    kHciCmdLeReadSupportedStates                   = 0x1C,
+    kHciCmdLeReceiverTest                          = 0x1D,
+    kHciCmdLeTransmitterTest                       = 0x1E,
+    kHciCmdLeTestEnd                               = 0x1F,
+    kHciCmdLeRemoteConnectionParamReqReply         = 0x20,
+    kHciCmdLeRemoteConnectionParamReqNegativeReply = 0x21,
+    kHciCmdLeSetDataLength                         = 0x22,
+    kHciCmdLeReadSuggestedDefaultDataLength        = 0x23,
+    kHciCmdLeWriteSuggestedDefaultDataLength       = 0x24,
+    kHciCmdLeReadLocalP256PublicKey                = 0x25,
+    kHciCmdLeGenerateDHKey                         = 0x26,
+    kHciCmdLeAddDeviceToResolvingList              = 0x27,
+    kHciCmdLeRemoveDeviceFromResolvingList         = 0x28,
+    kHciCmdLeClearResolvingList                    = 0x29,
+    kHciCmdLeReadResolvingListSize                 = 0x2A,
+    kHciCmdLeReadPeerResolvableAddr                = 0x2B,
+    kHciCmdLeReadLocalResolvableAddr               = 0x2C,
+    kHciCmdLeSetAddrResolutionEnable               = 0x2D,
+    kHciCmdLeSetResolvablePrivateAddrTimeout       = 0x2E,
+    kHciCmdLeReadMaximumDataLength                 = 0x2F,
+} HciCmdLeController;
+
 #pragma pack(1)
 typedef struct {
     uint16_t opcode;
