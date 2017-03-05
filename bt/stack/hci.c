@@ -5,9 +5,7 @@
 
 #include "hci_defs.h"
 #include "hci_transport.h"
-
-// @TODO real logging
-#include <stdio.h>
+#include "toy_ble.h"
 
 /**
  * The buffer to be used for all outgoing
@@ -15,15 +13,17 @@
  */
 static uint8_t _hci_cmd_buf[HCI_MAX_CMD_LEN];
 
-// @TODO these are ugly and probably too boilerplate
+static void *_InitHciCmd(uint16_t ogf, uint16_t ocf)
+{
+    _hci_cmd_buf[0] = kHciPacketTypeCommand;
+    *((uint16_t*)&_hci_cmd_buf[1]) = HCI_OPCODE(ogf, ocf);
+    return &_hci_cmd_buf[1];
+}
+
 int HciSendReset(void)
 {
-    printf("HciSendReset\n");
-
-    _hci_cmd_buf[0] = kHciPacketTypeCommand;
-
-    HciCmdReset *const pkt = (HciCmdReset*)&_hci_cmd_buf[1];
-    pkt->hdr.opcode = HCI_OPCODE(kHciGroupControllerBaseband, kHciCmdControllerReset);
+    HciCmdReset *const pkt =
+        _InitHciCmd(kHciGroupControllerBaseband, kHciCmdControllerReset);
     pkt->hdr.param_len = sizeof(*pkt) - sizeof(pkt->hdr);
 
     return TBLE_Dep_HciTransportSendPacket(_hci_cmd_buf, sizeof(*pkt) + 1);
@@ -39,13 +39,10 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
         uint8_t adv_chan_map,
         uint8_t adv_filter_policy)
 {
-    printf("HciSendAdvertisingParams\n");
-
-    _hci_cmd_buf[0] = kHciPacketTypeCommand;
-
-    HciCmdSetAdvertisingParams *const pkt = (HciCmdSetAdvertisingParams*)&_hci_cmd_buf[1];
-    pkt->hdr.opcode = HCI_OPCODE(kHciGroupLeController, kHciCmdLeSetAdvertisingParams);
+    HciCmdSetAdvertisingParams *const pkt =
+        _InitHciCmd(kHciGroupLeController, kHciCmdLeSetAdvertisingParams);
     pkt->hdr.param_len = sizeof(*pkt) - sizeof(pkt->hdr);
+
     pkt->adv_interval_min = adv_interval_min;
     pkt->adv_interval_max = adv_interval_max;
     pkt->adv_type = adv_type;
@@ -56,7 +53,7 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
 
     if (peer_addr != NULL) {
         // @TODO probably needs byte reversing
-        memcpy(pkt->peer_addr, peer_addr, 6);
+        memcpy(pkt->peer_addr, peer_addr, BD_ADDR_LEN);
     }
 
     return TBLE_Dep_HciTransportSendPacket(_hci_cmd_buf, sizeof(*pkt) + 1);
@@ -64,13 +61,10 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
 
 int HciSendAdvertiseEnable(bool enable)
 {
-    printf("HciSendAdvertiseEnable\n");
-
-    _hci_cmd_buf[0] = kHciPacketTypeCommand;
-
-    HciCmdSetAdvertiseEnable *const pkt = (HciCmdSetAdvertiseEnable*)&_hci_cmd_buf[1];
-    pkt->hdr.opcode = HCI_OPCODE(kHciGroupLeController, kHciCmdLeSetAdvertiseEnable);
+    HciCmdSetAdvertiseEnable *const pkt =
+        _InitHciCmd(kHciGroupLeController, kHciCmdLeSetAdvertiseEnable);
     pkt->hdr.param_len = sizeof(*pkt) - sizeof(pkt->hdr);
+
     pkt->enable = enable;
 
     return TBLE_Dep_HciTransportSendPacket(_hci_cmd_buf, sizeof(*pkt) + 1);

@@ -4,8 +4,10 @@
 #pragma once
 
 #include "hci_error.h"
+#include "toy_ble.h"
 
-#define HCI_OPCODE(ogf, ocf) (ocf | ogf << 10)
+typedef uint16_t HciOpcode;
+#define HCI_OPCODE(ogf, ocf) (HciOpcode)((ocf | ogf << 10))
 
 /**
  * HCI Packet Types
@@ -216,7 +218,7 @@ typedef struct {
     uint8_t adv_type;
     uint8_t own_addr_type;
     uint8_t peer_addr_type;
-    uint8_t peer_addr[6];
+    uint8_t peer_addr[BD_ADDR_LEN];
     uint8_t adv_chan_map;
     uint8_t adv_filter_policy;
 } HciCmdSetAdvertisingParams;

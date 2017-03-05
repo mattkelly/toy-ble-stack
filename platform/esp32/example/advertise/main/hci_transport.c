@@ -16,13 +16,13 @@ static bool _can_send_packet = true;
 
 TBLE_PacketReceivedCallback packet_received_cb = NULL;
 
-static void HostSendPacketAvailableCb(void)
+static void _HostSendPacketAvailableCb(void)
 {
     printf("HostSendPacketAvailableCb\n");
     _can_send_packet = true;
 }
 
-static int HostReceivedPacketCb(uint8_t *data, uint16_t len)
+static int _HostReceivedPacketCb(uint8_t *data, uint16_t len)
 {
     if (packet_received_cb != NULL) {
         packet_received_cb(data, len);
@@ -32,8 +32,8 @@ static int HostReceivedPacketCb(uint8_t *data, uint16_t len)
 }
 
 static const esp_vhci_host_callback_t _vhci_host_cb = {
-    .notify_host_send_available = HostSendPacketAvailableCb,
-    .notify_host_recv = HostReceivedPacketCb,
+    .notify_host_send_available = _HostSendPacketAvailableCb,
+    .notify_host_recv = _HostReceivedPacketCb,
 };
 
 int TBLE_Dep_HciTransportInit(void)

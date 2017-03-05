@@ -12,8 +12,10 @@ void app_main(void)
         return;
     }
 
+    printf("HciSendReset\n");
     HciSendReset();
 
+    printf("HciSendSetAdvertisingParams\n");
     HciSendSetAdvertisingParams(256,  // 160ms
                                 256,  // 160ms
                                 0,    // Connectable undirected (ADV_IND)
@@ -23,6 +25,7 @@ void app_main(void)
                                 0x07, // 37, 38, 39
                                 0);   // Process All Conn and Scan
 
+    printf("HciSendAdvertiseEnable\n");
     HciSendAdvertiseEnable(true);
 
     while (1) {

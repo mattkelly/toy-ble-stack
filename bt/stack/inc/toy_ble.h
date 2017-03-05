@@ -3,6 +3,8 @@
  */
 #pragma once
 
+#define BD_ADDR_LEN 6
+
 /**
  * Initialize the stack. Must be called before any other TBLE_* functions are called.
  *
