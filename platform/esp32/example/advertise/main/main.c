@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -12,6 +13,17 @@ void app_main(void)
     }
 
     HciSendReset();
+
+    HciSendSetAdvertisingParams(256,  // 160ms
+                                256,  // 160ms
+                                0,    // Connectable undirected (ADV_IND)
+                                0,    // Public BD_ADDR
+                                0,    // Public BD_ADDR
+                                NULL,
+                                0x07, // 37, 38, 39
+                                0);   // Process All Conn and Scan
+
+    HciSendAdvertiseEnable(true);
 
     while (1) {
     }

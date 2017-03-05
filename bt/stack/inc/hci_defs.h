@@ -208,5 +208,26 @@ typedef struct {
 } HciCmdReset;
 #pragma pack()
 
+#pragma pack(1)
+typedef struct {
+    HciHdr hdr;
+    uint16_t adv_interval_min;
+    uint16_t adv_interval_max;
+    uint8_t adv_type;
+    uint8_t own_addr_type;
+    uint8_t peer_addr_type;
+    uint8_t peer_addr[6];
+    uint8_t adv_chan_map;
+    uint8_t adv_filter_policy;
+} HciCmdSetAdvertisingParams;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct {
+    HciHdr hdr;
+    uint8_t enable;
+} HciCmdSetAdvertiseEnable;
+#pragma pack()
+
 #define HCI_MAX_PARAM_LEN (UINT8_MAX)
 #define HCI_MAX_CMD_LEN (HCI_MAX_PARAM_LEN + sizeof(HciHdr))

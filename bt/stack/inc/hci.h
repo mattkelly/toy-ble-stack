@@ -25,7 +25,27 @@
  */
 #pragma once
 
+#include <stdbool.h>
+#include <stdint.h>
+
 /**
  * Send an HCI Reset command to the Controller.
  */
 int HciSendReset(void);
+
+/**
+ * Send an HCI Set Advertising Parameters command to the Controller.
+ */
+// @TODO enums etc.
+int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
+        uint16_t adv_interval_max,
+        uint8_t adv_type,
+        uint8_t own_addr_type,
+        uint8_t peer_addr_type,
+        uint8_t peer_addr[6],
+        uint8_t adv_chan_map,
+        uint8_t adv_filter_policy);
+/**
+ * Send an HCI Advertise Enable command to the Controller.
+ */
+int HciSendAdvertiseEnable(bool enable);

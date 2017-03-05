@@ -24,12 +24,6 @@ static void HostSendPacketAvailableCb(void)
 
 static int HostReceivedPacketCb(uint8_t *data, uint16_t len)
 {
-    printf("HostReceivedPacketCb: [ ");
-    for (size_t i = 0; i < len; i++) {
-        printf("%02X ", data[i]);
-    }
-    printf("] (%" PRIu16 " bytes)\n", len);
-
     if (packet_received_cb != NULL) {
         packet_received_cb(data, len);
     }
