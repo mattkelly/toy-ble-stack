@@ -8,6 +8,6 @@
 #
 TBLE_ROOT := ../../../../..
 
-COMPONENT_ADD_INCLUDEDIRS := $(TBLE_ROOT)/bt/stack/inc .
+COMPONENT_ADD_INCLUDEDIRS := $(TBLE_ROOT)/stack/inc .
 
-COMPONENT_SRCDIRS := $(TBLE_ROOT)/bt/stack .
+COMPONENT_SRCDIRS := $(TBLE_ROOT)/stack .

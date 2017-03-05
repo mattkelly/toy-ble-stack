@@ -35,7 +35,7 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
         uint8_t adv_type,
         uint8_t own_addr_type,
         uint8_t peer_addr_type,
-        uint8_t peer_addr[6],
+        uint8_t peer_addr[BD_ADDR_LEN],
         uint8_t adv_chan_map,
         uint8_t adv_filter_policy)
 {
