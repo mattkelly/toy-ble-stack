@@ -3,7 +3,11 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 #define BD_ADDR_LEN 6
+
+typedef uint8_t BdAddr[BD_ADDR_LEN];
 
 /**
  * Initialize the stack. Must be called before any other TBLE_* functions are called.

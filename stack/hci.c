@@ -13,11 +13,29 @@
  */
 static uint8_t _hci_cmd_buf[HCI_MAX_CMD_LEN];
 
-static void *_InitHciCmd(uint16_t ogf, uint16_t ocf)
+/**
+ * @brief Initialize a new HCI Command.
+ *
+ * @param[in] ogf The OGF of the command
+ * @param[in] ocf The OCF of the command
+ *
+ * @return Pointer to command that caller should fill
+ */
+static inline void *_InitHciCmd(uint16_t ogf, uint16_t ocf)
 {
     _hci_cmd_buf[0] = kHciPacketTypeCommand;
     *((uint16_t*)&_hci_cmd_buf[1]) = HCI_OPCODE(ogf, ocf);
     return &_hci_cmd_buf[1];
+}
+
+/**
+ * @brief Send an HCI Command.
+ *
+ * @param[in] len Length of the command, excluding packet type byte
+ */
+static inline int _SendHciCmd(size_t len)
+{
+    return TBLE_Dep_HciTransportSendPacket(_hci_cmd_buf, len + 1);
 }
 
 int HciSendReset(void)
@@ -26,7 +44,7 @@ int HciSendReset(void)
         _InitHciCmd(kHciGroupControllerBaseband, kHciCmdControllerReset);
     pkt->hdr.param_len = sizeof(*pkt) - sizeof(pkt->hdr);
 
-    return TBLE_Dep_HciTransportSendPacket(_hci_cmd_buf, sizeof(*pkt) + 1);
+    return _SendHciCmd(sizeof(*pkt));
 }
 
 // @TODO enums etc.
@@ -35,7 +53,7 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
         uint8_t adv_type,
         uint8_t own_addr_type,
         uint8_t peer_addr_type,
-        uint8_t peer_addr[BD_ADDR_LEN],
+        BdAddr peer_addr,
         uint8_t adv_chan_map,
         uint8_t adv_filter_policy)
 {
@@ -56,7 +74,7 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
         memcpy(pkt->peer_addr, peer_addr, BD_ADDR_LEN);
     }
 
-    return TBLE_Dep_HciTransportSendPacket(_hci_cmd_buf, sizeof(*pkt) + 1);
+    return _SendHciCmd(sizeof(*pkt));
 }
 
 int HciSendAdvertiseEnable(bool enable)
@@ -67,5 +85,5 @@ int HciSendAdvertiseEnable(bool enable)
 
     pkt->enable = enable;
 
-    return TBLE_Dep_HciTransportSendPacket(_hci_cmd_buf, sizeof(*pkt) + 1);
+    return _SendHciCmd(sizeof(*pkt));
 }
