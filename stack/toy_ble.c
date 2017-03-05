@@ -1,22 +1,12 @@
 #include "toy_ble.h"
 
+#include "hci.h"
 #include "hci_transport.h"
 
 // @TODO real logging
 #include <stdio.h>
 #include <inttypes.h>
 
-// @TODO
-static int PacketReceivedCb(void *data, size_t len)
-{
-    printf("TBLE PacketReceivedCb: [ ");
-    for (size_t i = 0; i < len; i++) {
-        printf("%02X ", ((uint8_t*)data)[i]);
-    }
-    printf("] (%" PRIu16 " bytes)\n", len);
-
-    return 0;
-}
 
 int TBLE_Init(void)
 {
@@ -30,7 +20,7 @@ int TBLE_Init(void)
 
     printf("Transport init success\n");
 
-    TBLE_Dep_HciTransportRegisterPacketReceivedCallback(PacketReceivedCb);
+    TBLE_Dep_HciTransportRegisterPacketReceivedCallback(HciHandleDataReceived);
 
     return 0;
 }

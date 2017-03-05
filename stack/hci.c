@@ -1,11 +1,16 @@
 #include "hci.h"
 
+#include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 
 #include "hci_defs.h"
 #include "hci_transport.h"
 #include "toy_ble.h"
+
+// @TODO real logging
+#include <stdio.h>
+#include <inttypes.h>
 
 /**
  * The buffer to be used for all outgoing
@@ -86,4 +91,50 @@ int HciSendAdvertiseEnable(bool enable)
     pkt->enable = enable;
 
     return _SendHciCmd(sizeof(*pkt));
+}
+
+static int _HandleAclDataReceived(const void *data, size_t len)
+{
+    printf("HCI ACL In: [ ");
+    for (size_t i = 0; i < len; i++) {
+        printf("%02X ", ((uint8_t*)data)[i]);
+    }
+    printf("] (%" PRIu16 " bytes)\n", len);
+
+    return 0;
+}
+
+static int _HandleEventReceived(const void *data, size_t len)
+{
+    printf("HCI Event In: [ ");
+    for (size_t i = 0; i < len; i++) {
+        printf("%02X ", ((uint8_t*)data)[i]);
+    }
+    printf("] (%" PRIu16 " bytes)\n", len);
+
+    return 0;
+}
+
+int HciHandleDataReceived(void *data, size_t len)
+{
+    int status = 0;
+
+    const HciPkt *const pkt = data;
+
+    switch (pkt->type) {
+        case kHciPacketTypeAclData:
+            status = _HandleAclDataReceived(pkt->data, len - sizeof(pkt->type));
+            break;
+
+        case kHciPacketTypeEventData:
+            status = _HandleEventReceived(pkt->data, len - sizeof(pkt->type));
+            break;
+
+        default:
+            printf("ERROR: Unknown packet type received: type = %" PRIx8 "\n", pkt->type);
+            status = -1;
+            break;
+    }
+
+    return status;
 }

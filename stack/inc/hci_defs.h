@@ -192,27 +192,34 @@ typedef enum {
 
 #pragma pack(1)
 typedef struct {
-    uint16_t opcode;
-    uint8_t param_len;
-} HciHdr;
+    uint8_t type;
+    uint8_t data[];
+} HciPkt;
 #pragma pack()
 
 #pragma pack(1)
 typedef struct {
-    HciHdr hdr;
+    uint16_t opcode;
+    uint8_t param_len;
+} HciCmdHdr;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct {
+    HciCmdHdr hdr;
     uint8_t params[];
 } HciCmd;
 #pragma pack()
 
 #pragma pack(1)
 typedef struct {
-    HciHdr hdr;
+    HciCmdHdr hdr;
 } HciCmdReset;
 #pragma pack()
 
 #pragma pack(1)
 typedef struct {
-    HciHdr hdr;
+    HciCmdHdr hdr;
     uint16_t adv_interval_min;
     uint16_t adv_interval_max;
     uint8_t adv_type;
@@ -226,10 +233,10 @@ typedef struct {
 
 #pragma pack(1)
 typedef struct {
-    HciHdr hdr;
+    HciCmdHdr hdr;
     uint8_t enable;
 } HciCmdSetAdvertiseEnable;
 #pragma pack()
 
 #define HCI_MAX_PARAM_LEN (UINT8_MAX)
-#define HCI_MAX_CMD_LEN (HCI_MAX_PARAM_LEN + sizeof(HciHdr))
+#define HCI_MAX_CMD_LEN (HCI_MAX_PARAM_LEN + sizeof(HciCmdHdr))

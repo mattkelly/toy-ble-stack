@@ -26,6 +26,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 /**
@@ -49,3 +50,8 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
  * Send an HCI Advertise Enable command to the Controller.
  */
 int HciSendAdvertiseEnable(bool enable);
+
+/**
+ * Handle data received by the HCI Transport.
+ */
+int HciHandleDataReceived(void *data, size_t len);
