@@ -29,6 +29,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "toy_ble.h"
+
 /**
  * Send an HCI Reset command to the Controller.
  */
@@ -43,7 +45,7 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
         uint8_t adv_type,
         uint8_t own_addr_type,
         uint8_t peer_addr_type,
-        uint8_t peer_addr[6],
+        BdAddr peer_addr,
         uint8_t adv_chan_map,
         uint8_t adv_filter_policy);
 /**
@@ -52,6 +54,6 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
 int HciSendAdvertiseEnable(bool enable);
 
 /**
- * Handle data received by the HCI Transport.
+ * Handle generic data received by the HCI Transport.
  */
 int HciHandleDataReceived(void *data, size_t len);

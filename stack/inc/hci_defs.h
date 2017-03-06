@@ -190,6 +190,16 @@ typedef enum {
     kHciCmdLeReadMaximumDataLength                 = 0x2F,
 } HciCmdLeController;
 
+/**
+ * HCI ACL Packet Boundary Flags
+ */
+typedef enum {
+    kHciAclPbFlagFirstNonFlushable  = 0x0,
+    kHciAclPbFlagContinuingFragment = 0x1,
+    kHciAclPbFlagFirstFlushable     = 0x2,
+    kHciAclPbFlagCompleteL2capPdu   = 0x3,
+} HciAclPacketBoundaryFlag;
+
 #pragma pack(1)
 typedef struct {
     uint8_t type;
@@ -202,6 +212,23 @@ typedef struct {
     uint16_t opcode;
     uint8_t param_len;
 } HciCmdHdr;
+#pragma pack()
+
+// @TODO might not want to use bitfields here
+#pragma pack(1)
+typedef struct {
+    uint16_t conn_handle : 12;
+    uint16_t pkt_boundary_flag : 2;
+    uint16_t broadcast_flag : 2;
+    uint16_t data_len;
+} HciAclDataHdr;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct {
+    HciAclDataHdr hdr;
+    uint8_t data[];
+} HciAclDataPkt;
 #pragma pack()
 
 #pragma pack(1)

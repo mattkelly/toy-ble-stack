@@ -6,6 +6,7 @@
 
 #include "hci_defs.h"
 #include "hci_transport.h"
+#include "l2cap.h"
 #include "toy_ble.h"
 
 // @TODO real logging
@@ -101,7 +102,15 @@ static int _HandleAclDataReceived(const void *data, size_t len)
     }
     printf("] (%" PRIu16 " bytes)\n", len);
 
-    return 0;
+    const HciAclDataPkt *const pkt = data;
+
+    printf(" --> Conn handle: %u\n", pkt->hdr.conn_handle);
+    printf(" --> PB Flag: %u\n", pkt->hdr.pkt_boundary_flag);
+    printf(" --> BC Flag: %u\n", pkt->hdr.broadcast_flag);
+    printf(" --> Data Len: %" PRIu16 "\n", pkt->hdr.data_len);
+
+    // @TODO dependency function for upper layer, etc.
+    return L2capHandleAclDataReceived(pkt->data, pkt->hdr.data_len, pkt->hdr.pkt_boundary_flag);
 }
 
 static int _HandleEventReceived(const void *data, size_t len)
