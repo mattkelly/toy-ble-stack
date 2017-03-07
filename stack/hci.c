@@ -83,13 +83,64 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
     return _SendHciCmd(sizeof(*pkt));
 }
 
-int HciSendAdvertiseEnable(bool enable)
+int HciSendSetAdvertisingData(uint8_t adv_data_len, const uint8_t *adv_data)
+{
+    // @TODO bounds checking
+
+    HciCmdSetAdvertisingData *const pkt =
+        _InitHciCmd(kHciGroupLeController, kHciCmdLeSetAdvertisingData);
+    pkt->hdr.param_len = sizeof(*pkt) - sizeof(pkt->hdr);
+
+    pkt->adv_data_len = adv_data_len;
+    memcpy(pkt->adv_data, adv_data, adv_data_len);
+
+    // Unused bytes must be zero
+    if (adv_data_len < sizeof(pkt->adv_data)) {
+        memset(pkt->adv_data + adv_data_len, 0, sizeof(pkt->adv_data) - adv_data_len);
+    }
+
+    return _SendHciCmd(sizeof(*pkt));
+}
+
+int HciSendSetAdvertiseEnable(bool enable)
 {
     HciCmdSetAdvertiseEnable *const pkt =
         _InitHciCmd(kHciGroupLeController, kHciCmdLeSetAdvertiseEnable);
     pkt->hdr.param_len = sizeof(*pkt) - sizeof(pkt->hdr);
 
     pkt->enable = enable;
+
+    return _SendHciCmd(sizeof(*pkt));
+}
+
+// @TODO enums etc.
+int HciSendSetScanParams(uint8_t le_scan_type,
+        uint16_t le_scan_interval,
+        uint16_t le_scan_window,
+        uint8_t own_address_type,
+        uint8_t scanning_filter_policy)
+{
+    HciCmdSetScanParams *const pkt =
+        _InitHciCmd(kHciGroupLeController, kHciCmdLeSetScanParams);
+    pkt->hdr.param_len = sizeof(*pkt) - sizeof(pkt->hdr);
+
+    pkt->le_scan_type = le_scan_type;
+    pkt->le_scan_interval = le_scan_interval;
+    pkt->le_scan_window = le_scan_window;
+    pkt->own_address_type = own_address_type;
+    pkt->scanning_filter_policy = scanning_filter_policy;
+
+    return _SendHciCmd(sizeof(*pkt));
+}
+
+int HciSendSetScanEnable(bool enable, bool filter_duplicates)
+{
+    HciCmdSetScanEnable *const pkt =
+        _InitHciCmd(kHciGroupLeController, kHciCmdLeSetScanEnable);
+    pkt->hdr.param_len = sizeof(*pkt) - sizeof(pkt->hdr);
+
+    pkt->enable = enable;
+    pkt->filter_duplicates = filter_duplicates;
 
     return _SendHciCmd(sizeof(*pkt));
 }

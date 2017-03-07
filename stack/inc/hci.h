@@ -48,10 +48,31 @@ int HciSendSetAdvertisingParams(uint16_t adv_interval_min,
         BdAddr peer_addr,
         uint8_t adv_chan_map,
         uint8_t adv_filter_policy);
+
 /**
  * Send an HCI Advertise Enable command to the Controller.
  */
-int HciSendAdvertiseEnable(bool enable);
+int HciSendSetAdvertiseEnable(bool enable);
+
+/**
+ * Send an HCI Set Advertising Data command to the Controller.
+ */
+int HciSendSetAdvertisingData(uint8_t adv_data_len, const uint8_t *adv_data);
+
+/**
+ * Send an HCI Set Scan Parameters command to the Controller.
+ */
+// @TODO enums etc.
+int HciSendSetScanParams(uint8_t le_scan_type,
+        uint16_t le_scan_interval,
+        uint16_t le_scan_window,
+        uint8_t own_address_type,
+        uint8_t scanning_filter_policy);
+
+/**
+ * Send an HCI Set Scan Enable command to the Controller.
+ */
+int HciSendSetScanEnable(bool enable, bool filter_duplicates);
 
 /**
  * Handle generic data received by the HCI Transport.

@@ -9,6 +9,8 @@
 typedef uint16_t HciOpcode;
 #define HCI_OPCODE(ogf, ocf) (HciOpcode)((ocf | ogf << 10))
 
+#define HCI_ADVERTISING_DATA_LEN 31
+
 /**
  * HCI Packet Types
  */
@@ -261,8 +263,35 @@ typedef struct {
 #pragma pack(1)
 typedef struct {
     HciCmdHdr hdr;
+    uint8_t adv_data_len;
+    uint8_t adv_data[HCI_ADVERTISING_DATA_LEN];
+} HciCmdSetAdvertisingData;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct {
+    HciCmdHdr hdr;
     uint8_t enable;
 } HciCmdSetAdvertiseEnable;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct {
+    HciCmdHdr hdr;
+    uint8_t le_scan_type;
+    uint16_t le_scan_interval;
+    uint16_t le_scan_window;
+    uint8_t own_address_type;
+    uint8_t scanning_filter_policy;
+} HciCmdSetScanParams;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct {
+    HciCmdHdr hdr;
+    uint8_t enable;
+    uint8_t filter_duplicates;
+} HciCmdSetScanEnable;
 #pragma pack()
 
 #define HCI_MAX_PARAM_LEN (UINT8_MAX)
